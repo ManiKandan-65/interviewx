@@ -113,7 +113,7 @@ const ROLE_INTELLIGENCE = {
 };
 
 const QUESTION_BANK = [
-    // --- JAVA DEVELOPER / TECHNICAL ---
+    // --- JAVA DEVELOPER ---
     {
         id: "java_01",
         role: "Java Developer",
@@ -195,7 +195,7 @@ const QUESTION_BANK = [
         videoSearchQuery: "Java Checked vs Unchecked Exceptions Tutorial"
     },
 
-    // --- FRONTEND DEVELOPER / TECHNICAL ---
+    // --- FRONTEND DEVELOPER ---
     {
         id: "fe_01",
         role: "Frontend Developer",
@@ -321,6 +321,118 @@ const QUESTION_BANK = [
         sampleAnswer: "B-Tree indexes maintain a balanced search tree on indexed columns, allowing the database engine to locate target records in O(log N) time instead of performing expensive full table scans. The trade-off is write overhead: whenever data is inserted, updated, or deleted, the index tree must be updated and rebalanced, which degrades write throughput and increases disk storage usage.",
         learningTopic: "Database Indexing Performance",
         videoSearchQuery: "Database Indexing B-Trees Explained Backend Interview"
+    },
+
+    // --- FULL STACK DEVELOPER ---
+    {
+        id: "fs_01",
+        role: "Full Stack Developer",
+        round: "Core Technical",
+        category: "System Architecture",
+        topic: "REST vs GraphQL",
+        difficulty: "Intermediate",
+        question: "Compare RESTful APIs with GraphQL. What are the key trade-offs in over-fetching vs under-fetching data?",
+        expectedAnswer: "REST uses multiple endpoints returning fixed data structures, leading to over-fetching (getting unused data) or under-fetching (requiring multiple HTTP requests). GraphQL uses a single POST endpoint where the client specifies exact requested fields in a single query.",
+        keyPoints: [
+            "REST: Multiple endpoints, fixed payload, risk of over-fetching/under-fetching.",
+            "GraphQL: Single endpoint, client-driven query payload, reduces network requests.",
+            "Trade-offs: GraphQL makes server-side caching and file uploading more complex."
+        ],
+        hint: "Focus on network payload control, endpoint count, and data fetching efficiency.",
+        explanation: "GraphQL shifts query design to the client, preventing over-fetching. REST relies on standard HTTP caching.",
+        sampleAnswer: "RESTful APIs rely on fixed endpoints (e.g. GET /users/1/posts) which often return excess data (over-fetching) or require multiple sequential API calls to build a UI (under-fetching). GraphQL uses a single schema endpoint where the client specifies exact required JSON keys in one request, eliminating excess network bandwidth while simplifying client state integration.",
+        learningTopic: "Full Stack REST vs GraphQL",
+        videoSearchQuery: "REST vs GraphQL API Comparison Full Stack Interview"
+    },
+
+    // --- SOFTWARE ENGINEER ---
+    {
+        id: "se_01",
+        role: "Software Engineer",
+        round: "Core Technical",
+        category: "OOP Design",
+        topic: "SOLID Principles",
+        difficulty: "Intermediate",
+        question: "Explain the SOLID principles of Object-Oriented Software Design with a brief summary of each letter.",
+        expectedAnswer: "SOLID stands for: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion. They ensure code is maintainable, scalable, and loosely coupled.",
+        keyPoints: [
+            "S: Single Responsibility (one reason to change).",
+            "O: Open/Closed (open for extension, closed for modification).",
+            "L: Liskov Substitution (subtypes must be substitutable for base types).",
+            "I: Interface Segregation (client-specific small interfaces).",
+            "D: Dependency Inversion (depend on abstractions, not concretions)."
+        ],
+        hint: "List S-O-L-I-D principles and explain how they prevent fragile code.",
+        explanation: "SOLID guidelines create modular, decoupled software architectures.",
+        sampleAnswer: "SOLID represents 5 core design principles: Single Responsibility (a class should have one primary responsibility), Open/Closed (software entities should be open for extension but closed for modification), Liskov Substitution (derived classes must be substitutable for base classes without breaking behavior), Interface Segregation (prefer small, client-specific interfaces over monolithic ones), and Dependency Inversion (high-level modules should depend on interfaces/abstractions rather than concrete implementations).",
+        learningTopic: "SOLID Principles Software Engineering",
+        videoSearchQuery: "SOLID Principles Object Oriented Design Interview"
+    },
+
+    // --- NETWORK ENGINEER ---
+    {
+        id: "net_01",
+        role: "Network Engineer",
+        round: "Core Technical",
+        category: "OSI Model",
+        topic: "OSI Model",
+        difficulty: "Beginner",
+        question: "List the 7 layers of the OSI Model from Layer 1 to Layer 7 and explain the role of TCP vs UDP.",
+        expectedAnswer: "Layers: 1. Physical 2. Data Link 3. Network 4. Transport 5. Session 6. Presentation 7. Application. TCP is connection-oriented, reliable with 3-way handshake. UDP is connectionless, fast, but unacknowledged.",
+        keyPoints: [
+            "7 OSI Layers: Physical, Data Link, Network, Transport, Session, Presentation, Application.",
+            "TCP: Connection-oriented, guaranteed delivery, flow control.",
+            "UDP: Connectionless, low latency, ideal for streaming/gaming."
+        ],
+        hint: "Physical up to Application layer, connection-oriented vs connectionless transport.",
+        explanation: "OSI standardizes network functions. TCP guarantees packet ordering; UDP favors real-time speed.",
+        sampleAnswer: "The 7 OSI layers are: Physical (Layer 1), Data Link (2), Network (3), Transport (4), Session (5), Presentation (6), and Application (Layer 7). TCP operates at Layer 4 providing reliable, connection-oriented packet delivery using a 3-way handshake (SYN, SYN-ACK, ACK) with flow control. UDP is connectionless and unacknowledged, eliminating handshake latency for real-time video streaming, VoIP, and gaming.",
+        learningTopic: "Network Engineering OSI Model TCP UDP",
+        videoSearchQuery: "OSI Model 7 Layers TCP vs UDP Network Engineer Interview"
+    },
+
+    // --- SUPPORT ENGINEER ---
+    {
+        id: "supp_01",
+        role: "Support Engineer",
+        round: "Core Technical",
+        category: "Linux Commands",
+        topic: "Linux Troubleshooting",
+        difficulty: "Beginner",
+        question: "How do you inspect live log files and search for HTTP 500 error spikes on a Linux server?",
+        expectedAnswer: "Use tail -f /var/log/nginx/error.log to view live logs. Use grep ' 500 ' logfile | awk '{print $1}' | sort | uniq -c to count frequency of HTTP 500 errors by IP address.",
+        keyPoints: [
+            "tail -f for real-time log streaming.",
+            "grep for string matching (e.g. HTTP status codes).",
+            "awk, sort, uniq -c for log aggregation and incident triage."
+        ],
+        hint: "Combine tail, grep, awk, and sort/uniq for command-line log analysis.",
+        explanation: "Linux CLI utilities allow instant triage of production server issues.",
+        sampleAnswer: "To inspect live server logs in real-time, I use 'tail -f /var/log/syslog' or the application log path. To investigate HTTP 500 errors, I combine command-line utilities like 'grep \"HTTP/1.1 500\" access.log | awk \"{print \$1}\" | sort | uniq -c' to pinpoint error counts and identify specific client IP addresses or failing API endpoints triggering backend exceptions.",
+        learningTopic: "Linux Log Analysis Troubleshooting",
+        videoSearchQuery: "Linux Log File Analysis grep awk tail Troubleshooting Interview"
+    },
+
+    // --- GENERAL HR / MANAGERIAL ROUND QUESTIONS ---
+    {
+        id: "hr_gen_01",
+        role: "Software Engineer",
+        round: "HR",
+        category: "HR & Behavioral",
+        topic: "Behavioral STAR",
+        difficulty: "Beginner",
+        question: "Tell me about a time you had a technical disagreement with a teammate or senior engineer. How did you resolve it?",
+        expectedAnswer: "Structure using STAR method: Situation (project context), Task (the conflict), Action (data-backed discussion, listening to trade-offs, creating a prototype to benchmark), Result (aligning on best solution for the product).",
+        keyPoints: [
+            "Focus on professional alignment, data-driven decisions, and empathy.",
+            "Avoid personal conflict; emphasize objective technical benchmarking.",
+            "Demonstrate active listening and commitment to team success."
+        ],
+        hint: "Use STAR: Situation ➔ Task ➔ Action ➔ Result with data-driven benchmarking.",
+        explanation: "Measures emotional intelligence, technical collaboration, and conflict resolution maturity.",
+        sampleAnswer: "In a recent project, my senior colleague favored a monolithic service while I advocated for a decoupled microservice architecture. I scheduled a 30-minute sync where I presented a clear benchmark comparison highlighting build latency, deployment risk, and maintenance trade-offs. We built a quick 1-day prototype together, which proved that a modular monolith best suited our current scale. We agreed on that compromise, delivering the feature 2 days ahead of schedule.",
+        learningTopic: "HR Behavioral Conflict Resolution",
+        videoSearchQuery: "STAR Method Behavioral Interview Technical Disagreement Answer"
     }
 ];
 

@@ -26,6 +26,9 @@ const App = {
         this.renderDashboard();
         this.renderBadges();
         this.checkInitialData();
+        this.setupCodingLab();
+        this.setupProjectRound();
+        this.setupHRRound();
     },
 
     onViewChange(viewId) {
@@ -77,8 +80,9 @@ const App = {
         if (roleSelect) {
             roleSelect.addEventListener('change', (e) => {
                 const isCustom = e.target.value === 'custom';
-                document.getElementById('custom-role-wrap').style.display = isCustom ? 'block' : 'none';
-                this.updateRoleIntelPreview(isCustom ? (document.getElementById('setup-custom-role').value || 'Custom Role') : e.target.value);
+                const customWrap = document.getElementById('custom-role-wrap');
+                if (customWrap) customWrap.style.display = isCustom ? 'block' : 'none';
+                this.updateRoleIntelPreview(isCustom ? (document.getElementById('setup-custom-role')?.value || 'Custom Role') : e.target.value);
             });
         }
         document.getElementById('setup-custom-role')?.addEventListener('input', (e) => {
@@ -98,7 +102,8 @@ const App = {
         if (answerInput) {
             answerInput.addEventListener('input', (e) => {
                 const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-                document.getElementById('answer-word-count').textContent = `${words} Words`;
+                const counter = document.getElementById('answer-word-count');
+                if (counter) counter.textContent = `${words} Words`;
             });
         }
 
@@ -106,14 +111,16 @@ const App = {
         if (slider) {
             slider.addEventListener('input', (e) => {
                 const val = e.target.value;
-                document.getElementById('conf-slider-val').textContent = `${val}%`;
+                const valEl = document.getElementById('conf-slider-val');
+                if (valEl) valEl.textContent = `${val}%`;
                 const label = val >= 80 ? 'High Confidence' : (val >= 50 ? 'Confident' : 'Uncertain');
-                document.getElementById('conf-badge-label').textContent = label;
+                const badgeEl = document.getElementById('conf-badge-label');
+                if (badgeEl) badgeEl.textContent = label;
             });
         }
 
         document.getElementById('btn-reveal-hint')?.addEventListener('click', () => {
-            document.getElementById('room-hint-text').classList.remove('hidden');
+            document.getElementById('room-hint-text')?.classList.remove('hidden');
         });
 
         document.getElementById('btn-toggle-timer')?.addEventListener('click', () => this.toggleTimer());
@@ -126,14 +133,14 @@ const App = {
 
         // Evaluation Modal Controls
         document.getElementById('btn-close-eval-modal')?.addEventListener('click', () => {
-            document.getElementById('eval-modal-backdrop').classList.add('hidden');
+            document.getElementById('eval-modal-backdrop')?.classList.add('hidden');
         });
         document.getElementById('btn-eval-continue')?.addEventListener('click', () => {
-            document.getElementById('eval-modal-backdrop').classList.add('hidden');
+            document.getElementById('eval-modal-backdrop')?.classList.add('hidden');
             this.navigateQuestion(1);
         });
 
-        // Learning Center Tabs
+        // Learning Center Tabs & Buttons
         document.querySelectorAll('.learning-tabs .tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabTarget = btn.getAttribute('data-tab');
@@ -143,6 +150,7 @@ const App = {
                 document.getElementById(tabTarget)?.classList.add('active');
             });
         });
+        document.getElementById('btn-practice-dbms-topic')?.addEventListener('click', () => this.startPracticeForTopic('DBMS'));
 
         // Vault Filters
         document.querySelectorAll('.vault-filter-bar .filter-chip').forEach(chip => {
@@ -157,7 +165,7 @@ const App = {
         // Compare Modal
         document.getElementById('btn-open-compare-modal')?.addEventListener('click', () => this.openCompareModal());
         document.getElementById('btn-close-compare-modal')?.addEventListener('click', () => {
-            document.getElementById('compare-modal-backdrop').classList.add('hidden');
+            document.getElementById('compare-modal-backdrop')?.classList.add('hidden');
         });
         document.getElementById('btn-run-compare')?.addEventListener('click', () => this.runCompareInterviews());
 
@@ -175,28 +183,48 @@ const App = {
     checkInitialData() {
         const profile = StorageManager.getProfile();
         if (profile.name) {
-            document.getElementById('user-quick-stat').style.display = 'flex';
-            document.getElementById('user-avatar-pill').style.display = 'flex';
+            const uqs = document.getElementById('user-quick-stat');
+            if (uqs) uqs.style.display = 'flex';
+            
+            const uap = document.getElementById('user-avatar-pill');
+            if (uap) uap.style.display = 'flex';
+
             const initials = profile.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('avatar-initials').textContent = initials;
-            document.getElementById('profile-avatar-lg-text').textContent = initials;
-            document.getElementById('quick-streak').textContent = StorageManager.getStreak().currentStreak || 0;
-            document.getElementById('quick-readiness').textContent = `${RecommendationEngine.calculateReadinessScore()}%`;
+            
+            const ai = document.getElementById('avatar-initials');
+            if (ai) ai.textContent = initials;
+            
+            const palg = document.getElementById('profile-avatar-lg-text');
+            if (palg) palg.textContent = initials;
+            
+            const qs = document.getElementById('quick-streak');
+            if (qs) qs.textContent = StorageManager.getStreak().currentStreak || 0;
+            
+            const qr = document.getElementById('quick-readiness');
+            if (qr) qr.textContent = `${RecommendationEngine.calculateReadinessScore()}%`;
         }
     },
 
     loadProfileIntoSetup() {
         const profile = StorageManager.getProfile();
-        if (profile.name) document.getElementById('setup-name').value = profile.name;
-        if (profile.experience) document.getElementById('setup-exp').value = profile.experience;
+        const nameInput = document.getElementById('setup-name');
+        if (nameInput && profile.name) nameInput.value = profile.name;
+
+        const expSelect = document.getElementById('setup-exp');
+        if (expSelect && profile.experience) expSelect.value = profile.experience;
+
         if (profile.role) {
             const roleSel = document.getElementById('setup-role');
-            if (Array.from(roleSel.options).some(o => o.value === profile.role)) {
-                roleSel.value = profile.role;
-            } else {
-                roleSel.value = 'custom';
-                document.getElementById('custom-role-wrap').style.display = 'block';
-                document.getElementById('setup-custom-role').value = profile.role;
+            if (roleSel) {
+                if (Array.from(roleSel.options).some(o => o.value === profile.role)) {
+                    roleSel.value = profile.role;
+                } else {
+                    roleSel.value = 'custom';
+                    const wrap = document.getElementById('custom-role-wrap');
+                    if (wrap) wrap.style.display = 'block';
+                    const customInput = document.getElementById('setup-custom-role');
+                    if (customInput) customInput.value = profile.role;
+                }
             }
         }
         this.updateRoleIntelPreview(profile.role || 'Software Engineer');
@@ -207,18 +235,27 @@ const App = {
         if (!intelBox) return;
 
         const roleData = ROLE_INTELLIGENCE[roleName] || ROLE_INTELLIGENCE["Software Engineer"];
-        document.getElementById('intel-role-title').textContent = `Selected Domain: ${roleName}`;
+        const titleEl = document.getElementById('intel-role-title');
+        if (titleEl) titleEl.textContent = `Selected Domain: ${roleName}`;
         
         const tagsContainer = document.getElementById('intel-topics-tags');
-        tagsContainer.innerHTML = roleData.topics.map(t => `<span class="badge badge-cyan">${t}</span>`).join('');
+        if (tagsContainer) {
+            tagsContainer.innerHTML = roleData.topics.map(t => `<span class="badge badge-gold">${t}</span>`).join('');
+        }
     },
 
     generateRoadmap() {
-        const name = document.getElementById('setup-name').value.trim() || 'Candidate';
-        const exp = document.getElementById('setup-exp').value;
-        const roleSel = document.getElementById('setup-role').value;
-        const role = roleSel === 'custom' ? (document.getElementById('setup-custom-role').value.trim() || 'Custom Role') : roleSel;
-        const companyType = document.getElementById('setup-company-type').value;
+        const nameInput = document.getElementById('setup-name');
+        const name = (nameInput?.value || '').trim() || 'Alex Mercer';
+        
+        const expSelect = document.getElementById('setup-exp');
+        const exp = expSelect?.value || '1-3 Years';
+
+        const roleSel = document.getElementById('setup-role')?.value || 'Software Engineer';
+        const customRole = document.getElementById('setup-custom-role')?.value || '';
+        const role = roleSel === 'custom' ? (customRole.trim() || 'Custom Role') : roleSel;
+
+        const companyType = document.getElementById('setup-company-type')?.value || 'Product-Based';
 
         // Save candidate profile
         StorageManager.saveProfile({
@@ -228,68 +265,44 @@ const App = {
 
         this.checkInitialData();
 
-        // Populate Roadmap View
-        document.getElementById('roadmap-subtitle').innerHTML = `Customized stage pipeline for <strong>${role}</strong> (${companyType}).`;
-        document.getElementById('checklist-company-tag').textContent = `${companyType} Preparation Checklist`;
-
-        // Render Checklist
-        const roleConfig = ROLE_INTELLIGENCE[role] || ROLE_INTELLIGENCE["Software Engineer"];
-        const savedChecklist = StorageManager.getChecklistState();
-        const checklistGrid = document.getElementById('roadmap-checklist-grid');
-        
-        let completedCount = 0;
-        let html = '';
-        roleConfig.checklist.forEach((item, idx) => {
-            const isChecked = savedChecklist[item] || false;
-            if (isChecked) completedCount++;
-            html += `
-                <label class="chk-item">
-                    <input type="checkbox" data-item="${item}" ${isChecked ? 'checked' : ''}>
-                    <span>${item}</span>
-                </label>
-            `;
-        });
-
-        checklistGrid.innerHTML = html;
-        document.getElementById('checklist-progress-text').textContent = `${completedCount} / ${roleConfig.checklist.length} Completed`;
-
-        // Bind Checkbox events
-        checklistGrid.querySelectorAll('input[type="checkbox"]').forEach(chk => {
-            chk.addEventListener('change', (e) => {
-                const itemText = e.target.getAttribute('data-item');
-                StorageManager.saveChecklistState(itemText, e.target.checked);
-                const count = checklistGrid.querySelectorAll('input[type="checkbox"]:checked').length;
-                document.getElementById('checklist-progress-text').textContent = `${count} / ${roleConfig.checklist.length} Completed`;
-            });
-        });
-
-        UIManager.showView('roadmap');
-        UIManager.showToast("Roadmap & Checklist Generated!", "cyan");
+        // Directly launch the interview session for seamless user flow
+        this.startInterviewSession();
     },
 
     // --- INTERVIEW ROOM SESSION ENGINE ---
     startInterviewSession(customQuestions = null) {
         const profile = StorageManager.getProfile();
+        const role = profile.role || document.getElementById('setup-role')?.value || 'Software Engineer';
         const type = document.getElementById('setup-type')?.value || 'Mixed Interview';
         const diff = document.getElementById('setup-diff')?.value || 'Intermediate';
         const length = parseInt(document.getElementById('setup-length')?.value || '10', 10);
 
         let questionPool = customQuestions;
-        if (!questionPool) {
-            // Filter Question Bank by Role
-            questionPool = QUESTION_BANK.filter(q => q.role === profile.role || q.role === 'Software Engineer');
-            if (questionPool.length === 0) questionPool = QUESTION_BANK;
+        if (!questionPool || questionPool.length === 0) {
+            // 1. Strict Filter: Role match
+            let filtered = QUESTION_BANK.filter(q => q.role === role);
 
-            // Duplicate/expand pool if needed to reach length
+            // 2. Type & Difficulty secondary match if enough items
+            if (filtered.length === 0) {
+                filtered = QUESTION_BANK.filter(q => q.role === 'Software Engineer' || q.category === type || q.round === type);
+            }
+
+            // 3. Fallback to full QUESTION_BANK if zero matches
+            if (filtered.length === 0) {
+                filtered = QUESTION_BANK;
+            }
+
+            // Duplicate/expand pool if needed to reach target length
+            questionPool = [...filtered];
             while (questionPool.length < length) {
-                questionPool = questionPool.concat(QUESTION_BANK);
+                questionPool = questionPool.concat(filtered);
             }
             questionPool = questionPool.slice(0, length);
         }
 
         this.interviewState = {
             active: true,
-            role: profile.role || 'Software Engineer',
+            role: role,
             type: type,
             difficulty: diff,
             length: questionPool.length,
@@ -305,7 +318,7 @@ const App = {
         this.startTimer();
         this.renderQuestionRoom();
         UIManager.showView('room');
-        UIManager.showToast("Interview Room Active! Best of luck.", "purple");
+        UIManager.showToast(`Interview Room Active (${questionPool.length} Questions)`, "gold");
     },
 
     renderQuestionRoom() {
@@ -313,34 +326,59 @@ const App = {
         const q = state.questions[state.currentIndex];
         if (!q) return;
 
-        document.getElementById('room-role-title').textContent = `${state.role} Interview`;
-        document.getElementById('room-q-progress-text').textContent = `Question ${state.currentIndex + 1} / ${state.length}`;
-        document.getElementById('room-q-progress-bar').style.width = `${((state.currentIndex + 1) / state.length) * 100}%`;
-        document.getElementById('room-topic-tag').textContent = q.topic || q.category || 'Technical';
-        document.getElementById('room-diff-tag').textContent = q.difficulty || state.difficulty;
+        const roleTitle = document.getElementById('room-role-title');
+        if (roleTitle) roleTitle.textContent = `${state.role} Interview`;
+
+        const qProgText = document.getElementById('room-q-progress-text');
+        if (qProgText) qProgText.textContent = `Question ${state.currentIndex + 1} / ${state.length}`;
+
+        const qProgBar = document.getElementById('room-q-progress-bar');
+        if (qProgBar) qProgBar.style.width = `${((state.currentIndex + 1) / state.length) * 100}%`;
+
+        const topicTag = document.getElementById('room-topic-tag');
+        if (topicTag) topicTag.textContent = q.topic || q.category || 'Technical';
+
+        const diffTag = document.getElementById('room-diff-tag');
+        if (diffTag) diffTag.textContent = q.difficulty || state.difficulty;
 
         const answeredCount = Object.keys(state.answers).filter(k => state.answers[k].status === 'answered').length;
-        document.getElementById('room-answered-count').textContent = `${answeredCount} / ${state.length}`;
+        const answeredEl = document.getElementById('room-answered-count');
+        if (answeredEl) answeredEl.textContent = `${answeredCount} / ${state.length}`;
 
-        document.getElementById('room-hint-text').textContent = q.hint || "Focus on key concepts and clear syntax.";
-        document.getElementById('room-hint-text').classList.add('hidden');
+        const hintText = document.getElementById('room-hint-text');
+        if (hintText) {
+            hintText.textContent = q.hint || "Focus on key technical concepts and clear syntax.";
+            hintText.classList.add('hidden');
+        }
 
-        document.getElementById('room-q-num-badge').textContent = `Question ${String(state.currentIndex + 1).padStart(2, '0')} / ${state.length}`;
-        document.getElementById('room-round-type-tag').textContent = q.round || state.type;
-        document.getElementById('room-question-text').textContent = q.question;
+        const qNumBadge = document.getElementById('room-q-num-badge');
+        if (qNumBadge) qNumBadge.textContent = `Question ${String(state.currentIndex + 1).padStart(2, '0')} / ${state.length}`;
+
+        const roundTag = document.getElementById('room-round-type-tag');
+        if (roundTag) roundTag.textContent = q.round || state.type;
+
+        const qText = document.getElementById('room-question-text');
+        if (qText) qText.textContent = q.question;
 
         // STAR guidance banner for HR
-        document.getElementById('star-guide-banner').style.display = (q.round === 'HR' || state.type === 'HR') ? 'block' : 'none';
+        const starBanner = document.getElementById('star-guide-banner');
+        if (starBanner) starBanner.style.display = (q.round === 'HR' || state.type === 'HR') ? 'block' : 'none';
 
         // Load existing answer if typed
         const saved = state.answers[state.currentIndex] || {};
-        document.getElementById('room-answer-input').value = saved.answer || '';
+        const ansInput = document.getElementById('room-answer-input');
+        if (ansInput) ansInput.value = saved.answer || '';
+
         const words = (saved.answer || '').trim().split(/\s+/).filter(w => w.length > 0).length;
-        document.getElementById('answer-word-count').textContent = `${words} Words`;
+        const wordCounter = document.getElementById('answer-word-count');
+        if (wordCounter) wordCounter.textContent = `${words} Words`;
 
         const conf = saved.confidence || 75;
-        document.getElementById('confidence-slider').value = conf;
-        document.getElementById('conf-slider-val').textContent = `${conf}%`;
+        const slider = document.getElementById('confidence-slider');
+        if (slider) slider.value = conf;
+
+        const sliderVal = document.getElementById('conf-slider-val');
+        if (sliderVal) sliderVal.textContent = `${conf}%`;
 
         this.renderQuestionNavGrid();
     },
@@ -348,6 +386,7 @@ const App = {
     renderQuestionNavGrid() {
         const state = this.interviewState;
         const grid = document.getElementById('room-q-nav-grid');
+        if (!grid) return;
         grid.innerHTML = '';
 
         for (let i = 0; i < state.length; i++) {
@@ -356,13 +395,12 @@ const App = {
             btn.textContent = String(i + 1).padStart(2, '0');
 
             if (i === state.currentIndex) {
-                btn.classList.add('current');
+                btn.classList.add('active');
             }
             if (state.answers[i]) {
                 const st = state.answers[i].status;
                 if (st === 'answered') btn.classList.add('answered');
                 else if (st === 'review') btn.classList.add('review');
-                else if (st === 'skipped') btn.classList.add('skipped');
             }
 
             btn.addEventListener('click', () => {
@@ -377,8 +415,13 @@ const App = {
 
     saveCurrentAnswerState(status = 'draft') {
         const state = this.interviewState;
-        const text = document.getElementById('room-answer-input').value;
-        const conf = parseInt(document.getElementById('confidence-slider').value, 10);
+        if (!state.active) return;
+
+        const ansInput = document.getElementById('room-answer-input');
+        const text = ansInput ? ansInput.value : '';
+
+        const slider = document.getElementById('confidence-slider');
+        const conf = slider ? parseInt(slider.value, 10) : 75;
 
         state.answers[state.currentIndex] = {
             ...(state.answers[state.currentIndex] || {}),
@@ -417,25 +460,52 @@ const App = {
         }
 
         // Show detailed evaluation modal
-        document.getElementById('eval-score-text').textContent = evalResult.score;
-        document.getElementById('eval-score-circle-fill').setAttribute('stroke-dasharray', `${evalResult.score}, 100`);
-        document.getElementById('eval-stated-conf').textContent = `${conf}%`;
-        document.getElementById('eval-tech-acc').textContent = `${evalResult.technicalAccuracy}%`;
-        document.getElementById('eval-conf-insight').textContent = evalResult.insight;
+        const scoreText = document.getElementById('eval-score-text');
+        if (scoreText) scoreText.textContent = `${evalResult.score} / 100`;
 
-        document.getElementById('eval-bar-acc').style.width = `${evalResult.technicalAccuracy}%`;
-        document.getElementById('eval-bar-comp').style.width = `${evalResult.completeness}%`;
-        document.getElementById('eval-bar-clar').style.width = `${evalResult.clarity}%`;
-        document.getElementById('eval-bar-rel').style.width = `${evalResult.relevance}%`;
+        const statedConf = document.getElementById('eval-stated-conf');
+        if (statedConf) statedConf.textContent = `${conf}%`;
 
-        document.getElementById('eval-user-answer-text').textContent = userAns || '(No answer submitted)';
-        document.getElementById('eval-expected-answer-text').textContent = q.expectedAnswer || 'N/A';
-        
-        document.getElementById('eval-key-points-list').innerHTML = (evalResult.matchedPoints.length > 0 ? evalResult.matchedPoints : ['None detected']).map(pt => `<li>✅ ${pt}</li>`).join('');
-        document.getElementById('eval-missing-points-list').innerHTML = (evalResult.missingPoints.length > 0 ? evalResult.missingPoints : ['None! Great coverage.']).map(pt => `<li>⚠️ ${pt}</li>`).join('');
-        document.getElementById('eval-sample-answer-text').textContent = evalResult.sampleAnswer || q.expectedAnswer;
+        const techAcc = document.getElementById('eval-tech-acc');
+        if (techAcc) techAcc.textContent = `${evalResult.technicalAccuracy}%`;
 
-        document.getElementById('eval-modal-backdrop').classList.remove('hidden');
+        const confInsight = document.getElementById('eval-conf-insight');
+        if (confInsight) confInsight.textContent = evalResult.insight;
+
+        const barAcc = document.getElementById('eval-bar-acc');
+        if (barAcc) barAcc.style.width = `${evalResult.technicalAccuracy}%`;
+
+        const barComp = document.getElementById('eval-bar-comp');
+        if (barComp) barComp.style.width = `${evalResult.completeness}%`;
+
+        const barClar = document.getElementById('eval-bar-clar');
+        if (barClar) barClar.style.width = `${evalResult.clarity}%`;
+
+        const barRel = document.getElementById('eval-bar-rel');
+        if (barRel) barRel.style.width = `${evalResult.relevance}%`;
+
+        const userAnsText = document.getElementById('eval-user-answer-text');
+        if (userAnsText) userAnsText.textContent = userAns || '(No answer submitted)';
+
+        const expectedAnsText = document.getElementById('eval-expected-answer-text');
+        if (expectedAnsText) expectedAnsText.textContent = q.expectedAnswer || 'N/A';
+
+        const matchedList = document.getElementById('eval-key-points-list');
+        if (matchedList) {
+            matchedList.innerHTML = (evalResult.matchedPoints.length > 0 ? evalResult.matchedPoints : ['None detected']).map(pt => `<li>✅ ${pt}</li>`).join('');
+        }
+
+        const missingList = document.getElementById('eval-missing-points-list');
+        if (missingList) {
+            missingList.innerHTML = (evalResult.missingPoints.length > 0 ? evalResult.missingPoints : ['None! Great coverage.']).map(pt => `<li>⚠️ ${pt}</li>`).join('');
+        }
+
+        const sampleAnsText = document.getElementById('eval-sample-answer-text');
+        if (sampleAnsText) sampleAnsText.textContent = evalResult.sampleAnswer || q.expectedAnswer;
+
+        const modalBackdrop = document.getElementById('eval-modal-backdrop');
+        if (modalBackdrop) modalBackdrop.classList.remove('hidden');
+
         this.renderQuestionNavGrid();
     },
 
@@ -461,7 +531,9 @@ const App = {
     },
 
     startTimer() {
-        clearInterval(this.interviewState.timerInterval);
+        if (this.interviewState.timerInterval) {
+            clearInterval(this.interviewState.timerInterval);
+        }
         this.interviewState.timerSeconds = 0;
         this.interviewState.isPaused = false;
 
@@ -478,12 +550,16 @@ const App = {
 
     toggleTimer() {
         this.interviewState.isPaused = !this.interviewState.isPaused;
-        document.getElementById('btn-toggle-timer').textContent = this.interviewState.isPaused ? 'Resume Timer' : 'Pause Timer';
+        const toggleBtn = document.getElementById('btn-toggle-timer');
+        if (toggleBtn) toggleBtn.textContent = this.interviewState.isPaused ? 'Resume Timer' : 'Pause Timer';
     },
 
     finishInterviewSession() {
-        clearInterval(this.interviewState.timerInterval);
+        if (this.interviewState.timerInterval) {
+            clearInterval(this.interviewState.timerInterval);
+        }
         const state = this.interviewState;
+        state.active = false;
 
         // Calculate overall score
         let totalScore = 0;
@@ -515,7 +591,6 @@ const App = {
             };
         });
 
-        // Find strongest & weakest topic
         let strongestTopic = 'General';
         let weakestTopic = 'General';
         let maxScore = -1;
@@ -537,7 +612,7 @@ const App = {
         const durationStr = `${mins}m ${secs}s`;
 
         // Save session to LocalStorage
-        const savedSession = StorageManager.saveSession({
+        StorageManager.saveSession({
             role: state.role,
             type: state.type,
             difficulty: state.difficulty,
@@ -549,10 +624,11 @@ const App = {
             topicBreakdown: topicBreakdown
         });
 
-        // Unlock Achievements
+        // Unlock Achievements & Update Dashboard
         this.renderBadges();
+        this.renderDashboard();
 
-        UIManager.showToast(`Interview Completed! Score: ${overallScore}%`, "green");
+        UIManager.showToast(`Interview Completed! Overall Score: ${overallScore}%`, "green");
         UIManager.showView('analytics');
     },
 
@@ -562,7 +638,6 @@ const App = {
         const name = profile.name || 'Alex Mercer';
         const role = profile.role || 'Software Engineer';
         
-        // Time-based greeting (Good morning / Good afternoon / Good evening)
         const hour = new Date().getHours();
         let greetingPrefix = 'Good evening';
         if (hour < 12) greetingPrefix = 'Good morning';
@@ -766,7 +841,7 @@ const App = {
             ytGrid.innerHTML = displayTopics.map(t => {
                 const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(t + ' Interview Tutorial')}`;
                 return `
-                    <div class="weak-topic-card card border-gold mb-2" style="margin-bottom: 12px;">
+                    <div class="weak-topic-card card border-gold mb-2" style="margin-bottom: 12px; padding: 14px;">
                         <div class="wt-header" style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 class="wt-title" style="font-size: 15px;">${t}</h3>
                             <span class="badge badge-gold">YOUTUBE GUIDE</span>
@@ -780,11 +855,10 @@ const App = {
     },
 
     startPracticeForTopic(topicName) {
-        // Generate practice session for this weak topic
         const topicQuestions = QUESTION_BANK.filter(q => q.topic === topicName || q.category === topicName);
         const pool = topicQuestions.length > 0 ? topicQuestions : QUESTION_BANK.slice(0, 5);
 
-        UIManager.showToast(`Starting 5-Question Practice Re-test for ${topicName}...`, "cyan");
+        UIManager.showToast(`Starting 5-Question Practice Re-test for ${topicName}...`, "gold");
         this.startInterviewSession(pool);
     },
 
@@ -857,7 +931,7 @@ const App = {
         if (!mistake) return;
 
         StorageManager.updateMistakeStatus(mistakeId, 'improved');
-        UIManager.showToast("Question retried! Vault status updated to Improved.", "green");
+        UIManager.showToast("Question retried! Vault status updated to Improved.", "emerald");
         this.renderMistakeVault();
     },
 
@@ -882,35 +956,55 @@ const App = {
     // --- CODING LAB ---
     setupCodingLab() {
         const p = CODING_PROBLEMS[0];
-        document.getElementById('coding-problem-title').textContent = p.title;
-        document.getElementById('coding-diff-badge').textContent = p.difficulty;
-        document.getElementById('coding-topic-badge').textContent = p.topic;
-        document.getElementById('coding-problem-desc').innerHTML = p.problemDesc;
-        document.getElementById('coding-example-text').textContent = p.exampleText;
-        document.getElementById('coding-expected-approach').textContent = p.expectedApproach;
-        document.getElementById('code-input').value = p.initialCode;
+        const titleEl = document.getElementById('coding-problem-title');
+        if (titleEl) titleEl.textContent = p.title;
+
+        const diffEl = document.getElementById('coding-diff-badge');
+        if (diffEl) diffEl.textContent = p.difficulty;
+
+        const topicEl = document.getElementById('coding-topic-badge');
+        if (topicEl) topicEl.textContent = p.topic;
+
+        const descEl = document.getElementById('coding-problem-desc');
+        if (descEl) descEl.innerHTML = p.problemDesc;
+
+        const exampleEl = document.getElementById('coding-example-text');
+        if (exampleEl) exampleEl.textContent = p.exampleText;
+
+        const approachEl = document.getElementById('coding-expected-approach');
+        if (approachEl) approachEl.textContent = p.expectedApproach;
+
+        const codeInput = document.getElementById('code-input');
+        if (codeInput) codeInput.value = p.initialCode;
 
         const submitBtn = document.getElementById('btn-submit-code');
         if (submitBtn) {
             submitBtn.onclick = () => {
-                const userCode = document.getElementById('code-input').value;
                 const resultBox = document.getElementById('coding-result-box');
-                resultBox.classList.remove('hidden');
+                if (resultBox) resultBox.classList.remove('hidden');
 
-                document.getElementById('coding-res-concept').textContent = p.conceptTested;
-                document.getElementById('coding-res-time').textContent = p.complexity;
-                document.getElementById('coding-res-gotchas').textContent = p.commonGotchas;
-                document.getElementById('coding-sample-sol-text').textContent = p.sampleSolution;
+                const conceptEl = document.getElementById('coding-res-concept');
+                if (conceptEl) conceptEl.textContent = p.conceptTested;
 
-                UIManager.showToast("Code Submission Evaluated! (Score: 88/100)", "green");
+                const timeEl = document.getElementById('coding-res-time');
+                if (timeEl) timeEl.textContent = p.complexity;
+
+                const gotchasEl = document.getElementById('coding-res-gotchas');
+                if (gotchasEl) gotchasEl.textContent = p.commonGotchas;
+
+                const sampleSolEl = document.getElementById('coding-sample-sol-text');
+                if (sampleSolEl) sampleSolEl.textContent = p.sampleSolution;
+
+                UIManager.showToast("Code Submission Evaluated! (Score: 88/100)", "emerald");
             };
         }
 
         const resetBtn = document.getElementById('btn-reset-code');
         if (resetBtn) {
             resetBtn.onclick = () => {
-                document.getElementById('code-input').value = p.initialCode;
-                document.getElementById('coding-result-box').classList.add('hidden');
+                if (codeInput) codeInput.value = p.initialCode;
+                const resultBox = document.getElementById('coding-result-box');
+                if (resultBox) resultBox.classList.add('hidden');
             };
         }
     },
@@ -918,13 +1012,14 @@ const App = {
     // --- PROJECT ROUND ---
     setupProjectRound() {
         const list = document.getElementById('project-questions-list');
+        if (!list) return;
         list.innerHTML = PROJECT_QUESTIONS.map(q => `
-            <div class="proj-card glass-panel">
+            <div class="card mb-3">
                 <h3>${q.question}</h3>
-                <p class="text-muted mb-3">${q.guidance}</p>
-                <textarea class="answer-textarea" rows="4" placeholder="Draft your project answer response..."></textarea>
-                <div class="text-right mt-3">
-                    <button class="btn btn-sm btn-cyan" onclick="UIManager.showToast('Project response saved.', 'cyan')">Save Response</button>
+                <p class="text-secondary" style="font-size: 13px; margin: 6px 0 12px 0;">${q.guidance}</p>
+                <textarea class="answer-textarea" rows="4" placeholder="Draft your technical project architecture response..."></textarea>
+                <div style="text-align: right; margin-top: 12px;">
+                    <button class="btn btn-sm btn-gold" onclick="UIManager.showToast('Project response saved.', 'gold')">Save Architecture Response</button>
                 </div>
             </div>
         `).join('');
@@ -933,18 +1028,21 @@ const App = {
     // --- HR ROUND ---
     setupHRRound() {
         const list = document.getElementById('hr-questions-list');
+        if (!list) return;
         list.innerHTML = HR_QUESTIONS.map(q => `
-            <div class="hr-card glass-panel">
+            <div class="card mb-3">
                 <h3>${q.question}</h3>
-                <div class="star-grid mb-3">
-                    <div class="star-col"><span class="font-yellow">S:</span> ${q.starStructure.situation}</div>
-                    <div class="star-col"><span class="font-yellow">T:</span> ${q.starStructure.task}</div>
-                    <div class="star-col"><span class="font-yellow">A:</span> ${q.starStructure.action}</div>
-                    <div class="star-col"><span class="font-yellow">R:</span> ${q.starStructure.result}</div>
+                <div class="card" style="background: var(--bg-surface); margin: 10px 0 14px 0; padding: 12px;">
+                    <div style="font-size: 12.5px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div><strong class="text-gold">S:</strong> ${q.starStructure.situation}</div>
+                        <div><strong class="text-gold">T:</strong> ${q.starStructure.task}</div>
+                        <div><strong class="text-gold">A:</strong> ${q.starStructure.action}</div>
+                        <div><strong class="text-gold">R:</strong> ${q.starStructure.result}</div>
+                    </div>
                 </div>
                 <textarea class="answer-textarea" rows="4" placeholder="Draft your STAR response..."></textarea>
-                <div class="text-right mt-3">
-                    <button class="btn btn-sm btn-glow-purple" onclick="UIManager.showToast('STAR answer saved!', 'purple')">Save STAR Answer</button>
+                <div style="text-align: right; margin-top: 12px;">
+                    <button class="btn btn-sm btn-gold" onclick="UIManager.showToast('STAR answer saved!', 'gold')">Save STAR Answer</button>
                 </div>
             </div>
         `).join('');
@@ -953,8 +1051,8 @@ const App = {
     // --- ANALYTICS VIEW ---
     renderAnalytics() {
         const readiness = RecommendationEngine.calculateReadinessScore();
-        ChartRenderer.renderCircularDial('analytics-readiness-circle', readiness, 'cyan');
-        document.getElementById('analytics-readiness-num').textContent = `${readiness}%`;
+        const readinessNum = document.getElementById('analytics-readiness-num');
+        if (readinessNum) readinessNum.textContent = `${readiness}%`;
 
         const topicStats = StorageManager.getTopicStats();
         ChartRenderer.renderTopicBars('analytics-topics-list', topicStats);
@@ -962,14 +1060,23 @@ const App = {
         const history = StorageManager.getHistory();
         if (history.length > 0) {
             const last = history[0];
-            document.getElementById('debrief-good-list').innerHTML = `
-                <li>Strong performance in ${last.strongestTopic || 'Core Technical'}.</li>
-                <li>Overall Interview Quality Score: ${last.score}%.</li>
-            `;
-            document.getElementById('debrief-bad-list').innerHTML = `
-                <li>Target practice recommended for ${last.weakestTopic || 'General Areas'}.</li>
-            `;
-            document.getElementById('debrief-next-action-text').textContent = `Practice ${last.weakestTopic || 'weak topics'} for 30 minutes before your next session.`;
+            const goodList = document.getElementById('debrief-good-list');
+            if (goodList) {
+                goodList.innerHTML = `
+                    <li>Strong performance in ${last.strongestTopic || 'Core Technical'}.</li>
+                    <li>Overall Interview Quality Score: ${last.score}%.</li>
+                `;
+            }
+            const badList = document.getElementById('debrief-bad-list');
+            if (badList) {
+                badList.innerHTML = `
+                    <li>Target practice recommended for ${last.weakestTopic || 'General Areas'}.</li>
+                `;
+            }
+            const nextActionText = document.getElementById('debrief-next-action-text');
+            if (nextActionText) {
+                nextActionText.textContent = `Practice ${last.weakestTopic || 'weak topics'} for 30 minutes before your next session.`;
+            }
         }
     },
 
@@ -977,9 +1084,10 @@ const App = {
     renderHistory() {
         const history = StorageManager.getHistory();
         const tbody = document.getElementById('history-full-tbody');
+        if (!tbody) return;
 
         if (history.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" class="text-center empty-state-td">No history logged yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center empty-state-td">No history logged yet.</td></tr>`;
             return;
         }
 
@@ -988,10 +1096,8 @@ const App = {
                 <td>${s.formattedDate}</td>
                 <td><strong>${s.role}</strong></td>
                 <td>${s.type}</td>
-                <td><span class="badge ${s.score >= 70 ? 'badge-green' : 'badge-warning'}">${s.score}%</span></td>
+                <td><span class="badge ${s.score >= 70 ? 'badge-emerald' : 'badge-amber'}">${s.score}%</span></td>
                 <td>${s.confidence}%</td>
-                <td class="font-green">${s.strongestTopic || 'N/A'}</td>
-                <td class="font-red">${s.weakestTopic || 'N/A'}</td>
                 <td>${s.duration || 'N/A'}</td>
             </tr>
         `).join('');
@@ -1006,51 +1112,74 @@ const App = {
         }
         const sel1 = document.getElementById('compare-session-1');
         const sel2 = document.getElementById('compare-session-2');
+        if (!sel1 || !sel2) return;
 
         const optionsHtml = history.map(s => `<option value="${s.id}">${s.formattedDate} — ${s.role} (${s.score}%)</option>`).join('');
         sel1.innerHTML = optionsHtml;
         sel2.innerHTML = optionsHtml;
         sel2.selectedIndex = Math.min(1, history.length - 1);
 
-        document.getElementById('compare-modal-backdrop').classList.remove('hidden');
+        document.getElementById('compare-modal-backdrop')?.classList.remove('hidden');
     },
 
     runCompareInterviews() {
         const history = StorageManager.getHistory();
-        const id1 = document.getElementById('compare-session-1').value;
-        const id2 = document.getElementById('compare-session-2').value;
+        const sel1 = document.getElementById('compare-session-1');
+        const sel2 = document.getElementById('compare-session-2');
+        if (!sel1 || !sel2) return;
+
+        const id1 = sel1.value;
+        const id2 = sel2.value;
 
         const s1 = history.find(s => s.id === id1);
         const s2 = history.find(s => s.id === id2);
 
         if (!s1 || !s2) return;
 
-        document.getElementById('cmp-sess1-title').textContent = `${s1.role} (${s1.formattedDate})`;
-        document.getElementById('cmp-sess1-score').textContent = `${s1.score}%`;
+        const title1 = document.getElementById('cmp-sess1-title');
+        if (title1) title1.textContent = `${s1.role} (${s1.formattedDate})`;
 
-        document.getElementById('cmp-sess2-title').textContent = `${s2.role} (${s2.formattedDate})`;
-        document.getElementById('cmp-sess2-score').textContent = `${s2.score}%`;
+        const score1 = document.getElementById('cmp-sess1-score');
+        if (score1) score1.textContent = `${s1.score}%`;
+
+        const title2 = document.getElementById('cmp-sess2-title');
+        if (title2) title2.textContent = `${s2.role} (${s2.formattedDate})`;
+
+        const score2 = document.getElementById('cmp-sess2-score');
+        if (score2) score2.textContent = `${s2.score}%`;
 
         const diff = s2.score - s1.score;
-        document.getElementById('cmp-delta-badge').textContent = `${diff >= 0 ? '+' : ''}${diff}% Improvement`;
+        const badge = document.getElementById('cmp-delta-badge');
+        if (badge) badge.textContent = `${diff >= 0 ? '+' : ''}${diff}% Improvement`;
     },
 
     // --- PROFILE VIEW ---
     renderProfile() {
         const profile = StorageManager.getProfile();
         const history = StorageManager.getHistory();
-        const weak = StorageManager.getWeakTopics();
         const vault = StorageManager.getMistakeVault();
 
-        document.getElementById('profile-card-name').textContent = profile.name || 'Alex Mercer';
-        document.getElementById('profile-card-role').textContent = profile.role || 'Software Engineer';
-        document.getElementById('profile-card-exp').textContent = profile.experience || 'Fresher';
+        const nameEl = document.getElementById('profile-card-name');
+        if (nameEl) nameEl.textContent = profile.name || 'Alex Mercer';
 
-        document.getElementById('profile-stat-sessions').textContent = history.length;
+        const roleEl = document.getElementById('profile-card-role');
+        if (roleEl) roleEl.textContent = `${profile.role || 'Software Engineer'} • ${profile.experience || '1-3 Years Experience'}`;
+
+        const expEl = document.getElementById('profile-card-exp');
+        if (expEl) expEl.textContent = profile.experience || '1-3 Years';
+
+        const sessEl = document.getElementById('profile-stat-sessions');
+        if (sessEl) sessEl.textContent = history.length;
+
         const topScore = history.reduce((max, s) => Math.max(max, s.score || 0), 0);
-        document.getElementById('profile-stat-top-score').textContent = `${topScore}%`;
-        document.getElementById('profile-stat-resolved').textContent = Object.values(StorageManager.getTopicStats()).filter(t => t.avgScore >= 70).length;
-        document.getElementById('profile-stat-vault').textContent = vault.length;
+        const topEl = document.getElementById('profile-stat-top-score');
+        if (topEl) topEl.textContent = `${topScore}%`;
+
+        const resolvedEl = document.getElementById('profile-stat-resolved');
+        if (resolvedEl) resolvedEl.textContent = Object.values(StorageManager.getTopicStats()).filter(t => t.avgScore >= 70).length;
+
+        const vaultEl = document.getElementById('profile-stat-vault');
+        if (vaultEl) vaultEl.textContent = vault.length;
     }
 };
 

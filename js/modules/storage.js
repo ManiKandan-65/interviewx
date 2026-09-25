@@ -14,27 +14,45 @@ const StorageManager = {
         THEME: 'interviewx_theme_pref'
     },
 
+    safeParse(data, fallback) {
+        if (!data) return fallback;
+        try {
+            return JSON.parse(data);
+        } catch (e) {
+            console.warn("StorageManager: JSON parse error, returning fallback", e);
+            return fallback;
+        }
+    },
+
+    safeSet(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error("StorageManager: Failed to save to localStorage", e);
+        }
+    },
+
     // --- CANDIDATE PROFILE ---
     getProfile() {
         const data = localStorage.getItem(this.KEYS.PROFILE);
-        return data ? JSON.parse(data) : {
+        return this.safeParse(data, {
             name: 'Alex Mercer',
-            experience: 'Fresher',
+            experience: '1-3 Years',
             role: 'Software Engineer',
             customRole: '',
             companyType: 'Product-Based',
             theme: 'dark'
-        };
+        });
     },
 
     saveProfile(profile) {
-        localStorage.setItem(this.KEYS.PROFILE, JSON.stringify(profile));
+        this.safeSet(this.KEYS.PROFILE, profile);
     },
 
     // --- INTERVIEW HISTORY ---
     getHistory() {
         const data = localStorage.getItem(this.KEYS.HISTORY);
-        return data ? JSON.parse(data) : [];
+        return this.safeParse(data, []);
     },
 
     saveSession(session) {
@@ -46,7 +64,7 @@ const StorageManager = {
             ...session
         };
         history.unshift(newSession);
-        localStorage.setItem(this.KEYS.HISTORY, JSON.stringify(history));
+        this.safeSet(this.KEYS.HISTORY, history);
 
         // Update Topic Performance Stats
         if (session.topicBreakdown) {
@@ -65,7 +83,7 @@ const StorageManager = {
     // --- TOPIC PERFORMANCE & WEAK TOPIC DETECTION ---
     getTopicStats() {
         const data = localStorage.getItem(this.KEYS.TOPICS);
-        return data ? JSON.parse(data) : {};
+        return this.safeParse(data, {});
     },
 
     updateTopicPerformance(topic, score, confidence) {
@@ -89,7 +107,7 @@ const StorageManager = {
         stats[topic].history.push({ date: new Date().toISOString(), score: score });
         stats[topic].lastTested = new Date().toISOString();
 
-        localStorage.setItem(this.KEYS.TOPICS, JSON.stringify(stats));
+        this.safeSet(this.KEYS.TOPICS, stats);
     },
 
     getWeakTopics() {
@@ -100,14 +118,13 @@ const StorageManager = {
                 weakList.push(stats[topic]);
             }
         });
-        // Sort by lowest avgScore
         return weakList.sort((a, b) => a.avgScore - b.avgScore);
     },
 
     // --- MISTAKE VAULT ---
     getMistakeVault() {
         const data = localStorage.getItem(this.KEYS.MISTAKES);
-        return data ? JSON.parse(data) : [];
+        return this.safeParse(data, []);
     },
 
     saveMistake(mistake) {
@@ -138,7 +155,7 @@ const StorageManager = {
             });
         }
 
-        localStorage.setItem(this.KEYS.MISTAKES, JSON.stringify(vault));
+        this.safeSet(this.KEYS.MISTAKES, vault);
     },
 
     updateMistakeStatus(mistakeId, newStatus) {
@@ -146,15 +163,14 @@ const StorageManager = {
         const item = vault.find(m => m.id === mistakeId);
         if (item) {
             item.status = newStatus;
-            localStorage.setItem(this.KEYS.MISTAKES, JSON.stringify(vault));
+            this.safeSet(this.KEYS.MISTAKES, vault);
         }
     },
 
     // --- STREAK TRACKER ---
     getStreak() {
         const data = localStorage.getItem(this.KEYS.STREAK);
-        if (!data) return { currentStreak: 0, lastActiveDate: null };
-        return JSON.parse(data);
+        return this.safeParse(data, { currentStreak: 0, lastActiveDate: null });
     },
 
     updateStreak() {
@@ -177,20 +193,20 @@ const StorageManager = {
                 streakData.lastActiveDate = today;
             }
         }
-        localStorage.setItem(this.KEYS.STREAK, JSON.stringify(streakData));
+        this.safeSet(this.KEYS.STREAK, streakData);
         return streakData.currentStreak;
     },
 
     // --- COMPANY CHECKLIST STATE ---
     getChecklistState() {
         const data = localStorage.getItem(this.KEYS.CHECKLIST);
-        return data ? JSON.parse(data) : {};
+        return this.safeParse(data, {});
     },
 
     saveChecklistState(itemText, isChecked) {
         const state = this.getChecklistState();
         state[itemText] = isChecked;
-        localStorage.setItem(this.KEYS.CHECKLIST, JSON.stringify(state));
+        this.safeSet(this.KEYS.CHECKLIST, state);
     },
 
     // --- THEME PREFERENCE ---
@@ -199,7 +215,11 @@ const StorageManager = {
     },
 
     saveTheme(theme) {
-        localStorage.setItem(this.KEYS.THEME, theme);
+        try {
+            localStorage.setItem(this.KEYS.THEME, theme);
+        } catch (e) {
+            console.error("StorageManager: Failed to save theme", e);
+        }
     },
 
     // --- BACKUP & DATA RESET ---
