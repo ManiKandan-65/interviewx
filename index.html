@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterviewX — Executive Interview Suite</title>
+    <meta name="description" content="Simulate real interview rounds, discover weak areas, analyze confidence vs accuracy, and build an executive path to interview success.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- TOP GLOBAL BAR -->
+    <header class="top-bar" id="top-bar">
+        <div class="brand-logo" id="logo-btn">
+            <div class="logo-icon-wrap">
+                <span class="logo-glyph">IX</span>
+            </div>
+            <div class="logo-text">
+                <span class="brand-title">INTERVIEW<span class="accent-text">X</span></span>
+                <span class="brand-sub">EXECUTIVE INTELLIGENCE</span>
+            </div>
+        </div>
+
+        <div class="top-status-bar" id="top-status-bar">
+            <div class="system-badge">
+                <span class="pulse-dot"></span>
+                <span id="engine-status-text">EXECUTIVE SUITE ACTIVE</span>
+            </div>
+        </div>
+
+        <div class="top-actions">
+            <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
+                <span class="theme-icon moon-icon">🌙</span>
+                <span class="theme-icon sun-icon">☀️</span>
+            </button>
+            <button class="btn btn-gold btn-sm" id="btn-quick-start">
+                <span>+ New Interview</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN APP LAYOUT -->
+    <div class="app-layout">
+        
+        <!-- FIXED LEFT SIDEBAR -->
+        <aside class="app-sidebar" id="app-sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section-title">PLATFORM NAVIGATION</div>
+                
+                <a href="#landing" class="nav-item active" data-view="landing">
+                    <span class="nav-icon">🚀</span>
+                    <span class="nav-label">Overview</span>
+                </a>
+                
+                <a href="#dashboard" class="nav-item" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Command Dashboard</span>
+                </a>
+
+                <a href="#setup" class="nav-item" data-view="setup">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Interview Setup</span>
+                </a>
+
+                <a href="#coding-lab" class="nav-item" data-view="coding-lab">
+                    <span class="nav-icon">💻</span>
+                    <span class="nav-label">Coding Lab</span>
+                </a>
+
+                <a href="#project-round" class="nav-item" data-view="project-round">
+                    <span class="nav-icon">📂</span>
+                    <span class="nav-label">Project Round</span>
+                </a>
+
+                <a href="#hr-round" class="nav-item" data-view="hr-round">
+                    <span class="nav-icon">🤝</span>
+                    <span class="nav-label">HR Round</span>
+                </a>
+
+                <div class="nav-section-title">INTELLIGENCE</div>
+
+                <a href="#learning-center" class="nav-item" data-view="learning-center">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-label">Learning Center</span>
+                    <span class="nav-badge" id="weak-topics-count">0</span>
+                </a>
+
+                <a href="#mistake-vault" class="nav-item" data-view="mistake-vault">
+                    <span class="nav-icon">🔒</span>
+                    <span class="nav-label">Mistake Vault</span>
+                    <span class="nav-badge badge-warning" id="mistakes-count">0</span>
+                </a>
+
+                <a href="#analytics" class="nav-item" data-view="analytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-label">Analytics</span>
+                </a>
+
+                <a href="#history" class="nav-item" data-view="history">
+                    <span class="nav-icon">📜</span>
+                    <span class="nav-label">History</span>
+                </a>
+
+                <a href="#profile" class="nav-item" data-view="profile">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </nav>
+
+            <!-- SIDEBAR USER PROFILE FOOTER -->
+            <div class="sidebar-footer">
+                <div class="sidebar-user-profile" id="sidebar-user-profile">
+                    <div class="user-avatar-gold" id="sidebar-avatar-initials">AM</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Alex Mercer</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Software Engineer</div>
+                    </div>
+                    <div class="sidebar-user-readiness" id="sidebar-user-readiness">72%</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- VIEW CONTAINER -->
+        <main class="app-main-content" id="app-main">
+
+            <!-- ================= VIEW 1: LANDING OVERVIEW ================= -->
+            <section class="view-section active" id="view-landing">
+                <div class="hero-container">
+                    <div class="hero-content" style="max-width: 800px; margin-bottom: 40px;">
+                        <span class="executive-badge">EXECUTIVE INTERVIEW INTELLIGENCE</span>
+                        <h1 class="hero-title" style="font-size: 42px; margin: 12px 0;">Prepare Smarter.<br><span class="text-gold">Interview Better.</span></h1>
+                        <p class="hero-subtitle" style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
+                            Simulate real executive interview rounds, discover weak technical areas, analyze confidence vs accuracy, and build a personalized path to interview mastery.
+                        </p>
+                        <div class="hero-cta-group" style="margin-top: 24px; display: flex; gap: 16px;">
+                            <button class="btn btn-gold btn-lg" id="btn-hero-start">
+                                <span>🚀 Launch Executive Interview</span>
+                            </button>
+                            <button class="btn btn-dark btn-lg" id="btn-hero-explore">
+                                <span>Explore Dashboard</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="features-section" id="platform-features">
+                        <div class="section-header" style="margin-bottom: 24px;">
+                            <span class="executive-badge">CORE CAPABILITIES</span>
+                            <h2>Platform Built For High-Stakes Technical Preparation</h2>
+                        </div>
+                        <div class="features-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                            <div class="card">
+                                <h3>🎯 Role-Based Simulation</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Tailored interview question engines for Java, Frontend, Backend, QA, Data Analyst, & DevOps.</p>
+                            </div>
+                            <div class="card">
+                                <h3>🔬 Answer Quality Evaluation</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Evaluates technical accuracy, clarity, key missing points, and structured communication depth.</p>
+                            </div>
+                            <div class="card">
+                                <h3>🧠 Confidence Calibration</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Detect overconfidence or imposter syndrome by measuring self-rated confidence against score accuracy.</p>
+                            </div>
+                            <div class="card">
+                                <h3>🔍 Weak Topic Detection</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Pinpoint specific knowledge gaps in your stack with historical accuracy tracking.</p>
+                            </div>
+                            <div class="card">
+                                <h3>📺 YouTube Resource Hub</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Curated video learning resources paired with immediate practice re-tests to verify score improvements.</p>
+                            </div>
+                            <div class="card">
+                                <h3>🔒 Mistake Intelligence Vault</h3>
+                                <p class="text-secondary" style="margin-top: 8px;">Organize, review, and retry missed questions until complete technical mastery is achieved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 2: EXECUTIVE DASHBOARD (PART 3) ================= -->
+            <section class="view-section" id="view-dashboard">
+                <div class="dashboard-header-executive">
+                    <div class="greeting-wrap">
+                        <span class="executive-badge">EXECUTIVE SUITE</span>
+                        <h1 class="page-title-exec" id="dashboard-welcome-msg">Good evening, Alex Mercer</h1>
+                        <p class="page-subtitle-exec">Your interview preparation at a glance.</p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-gold btn-md" id="btn-dash-start-interview">
+                            <span>+ Start Interview</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TOP METRICS ROW (PART 3 REQUIREMENT) -->
+                <div class="exec-metrics-grid">
+                    <div class="exec-metric-card border-gold">
+                        <div class="metric-meta-lbl">Interview Readiness</div>
+                        <div class="metric-big-val" id="dash-readiness-val">72 <span class="val-denom">/ 100</span></div>
+                        <div class="progress-bar-sm"><div class="progress-fill gold" id="dash-readiness-fill" style="width: 72%"></div></div>
+                    </div>
+
+                    <div class="exec-metric-card">
+                        <div class="metric-meta-lbl">Technical</div>
+                        <div class="metric-big-val text-emerald" id="dash-tech-val">78%</div>
+                        <div class="progress-bar-sm"><div class="progress-fill emerald" id="dash-tech-fill" style="width: 78%"></div></div>
+                    </div>
+
+                    <div class="exec-metric-card">
+                        <div class="metric-meta-lbl">Communication</div>
+                        <div class="metric-big-val text-indigo" id="dash-comm-val">65%</div>
+                        <div class="progress-bar-sm"><div class="progress-fill indigo" id="dash-comm-fill" style="width: 65%"></div></div>
+                    </div>
+
+                    <div class="exec-metric-card">
+                        <div class="metric-meta-lbl">Coding</div>
+                        <div class="metric-big-val text-amber" id="dash-coding-val">61%</div>
+                        <div class="progress-bar-sm"><div class="progress-fill amber" id="dash-coding-fill" style="width: 61%"></div></div>
+                    </div>
+
+                    <div class="exec-metric-card">
+                        <div class="metric-meta-lbl">Confidence</div>
+                        <div class="metric-big-val text-gold" id="dash-conf-val">82%</div>
+                        <div class="progress-bar-sm"><div class="progress-fill gold" id="dash-conf-fill" style="width: 82%"></div></div>
+                    </div>
+                </div>
+
+                <!-- RECOMMENDED NEXT ACTION CARD (PART 3 REQUIREMENT) -->
+                <div class="exec-action-card border-gold mb-4" style="margin-bottom: 24px;">
+                    <div class="action-card-header">
+                        <span class="gold-dot"></span>
+                        <span class="action-card-tag">RECOMMENDED NEXT ACTION</span>
+                    </div>
+                    <div class="action-card-body">
+                        <div class="action-info">
+                            <h3 id="dash-next-action-title">Practice SQL Joins</h3>
+                            <p id="dash-next-action-desc">Reason: Your recent SQL performance is below your target.</p>
+                        </div>
+                        <button class="btn btn-gold btn-md" id="btn-dash-rec-action">Start Practice</button>
+                    </div>
+                </div>
+
+                <!-- DASHBOARD MAIN CONTENT GRID -->
+                <div class="dashboard-grid">
+                    <div class="dash-col main-col">
+                        
+                        <!-- Skill Category Breakdown -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Skill Category Breakdown</h3>
+                                <span class="badge badge-gold">LIVE METRICS</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="skills-bar-stack" id="dash-skills-stack">
+                                    <div class="skill-row">
+                                        <div class="skill-meta"><span>Technical Accuracy</span><strong id="skill-tech-val">78%</strong></div>
+                                        <div class="progress-bar-md"><div class="progress-fill emerald" id="skill-tech-bar" style="width: 78%"></div></div>
+                                    </div>
+                                    <div class="skill-row">
+                                        <div class="skill-meta"><span>Coding & Logic</span><strong id="skill-coding-val">61%</strong></div>
+                                        <div class="progress-bar-md"><div class="progress-fill amber" id="skill-coding-bar" style="width: 61%"></div></div>
+                                    </div>
+                                    <div class="skill-row">
+                                        <div class="skill-meta"><span>Communication & Clarity</span><strong id="skill-comm-val">65%</strong></div>
+                                        <div class="progress-bar-md"><div class="progress-fill indigo" id="skill-comm-bar" style="width: 65%"></div></div>
+                                    </div>
+                                    <div class="skill-row">
+                                        <div class="skill-meta"><span>Project Architecture</span><strong id="skill-proj-val">70%</strong></div>
+                                        <div class="progress-bar-md"><div class="progress-fill gold" id="skill-proj-bar" style="width: 70%"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Interviews List -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Interview Logs</h3>
+                                <button class="btn btn-xs btn-outline-gold" id="btn-dash-view-history">View All</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="data-table" id="dash-recent-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Target Role</th>
+                                                <th>Type</th>
+                                                <th>Score</th>
+                                                <th>Weak Area</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dash-recent-tbody">
+                                            <tr>
+                                                <td colspan="6" class="text-center">No interview sessions logged yet. Click "+ Start Interview" to begin.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Column: Priority Weak Topics & Badges -->
+                    <div class="dash-col side-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Priority Weak Topics</h3>
+                                <button class="btn btn-xs btn-outline-gold" id="btn-dash-to-learning">Learning Hub</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="weak-topics-list" id="dash-weak-list">
+                                    <div class="empty-list-placeholder text-muted">No weak topics recorded yet.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Achievements</h3>
+                                <span class="badge badge-gold" id="dash-badge-count">0 / 7</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="badges-grid" id="dash-badges-grid" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                    <!-- Dynamic badges -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 3: INTERVIEW SETUP ================= -->
+            <section class="view-section" id="view-setup">
+                <div class="setup-container" style="max-width: 800px; margin: 0 auto;">
+                    <div class="section-header text-center" style="margin-bottom: 24px;">
+                        <span class="executive-badge">CONFIGURATION CENTER</span>
+                        <h2>Candidate Profile & Interview Setup</h2>
+                        <p class="text-secondary">Tailor the intelligence engine to your experience level, company target, and interview domain.</p>
+                    </div>
+
+                    <div class="card border-gold">
+                        <form id="interview-setup-form" onsubmit="return false;">
+                            
+                            <div class="form-group">
+                                <label for="setup-name">Full Name *</label>
+                                <input type="text" id="setup-name" class="form-input" placeholder="e.g. Alex Mercer" required>
+                            </div>
+
+                            <div class="form-row-grid">
+                                <div class="form-group">
+                                    <label for="setup-exp">Experience Level *</label>
+                                    <select id="setup-exp" class="form-select" required>
+                                        <option value="Fresher">Fresher (Campus / Entry Level)</option>
+                                        <option value="0-1 Year">0 – 1 Year (Junior Engineer)</option>
+                                        <option value="1-3 Years" selected>1 – 3 Years (Mid-Level Engineer)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="setup-role">Target Role *</label>
+                                    <select id="setup-role" class="form-select" required>
+                                        <option value="Software Engineer" selected>Software Engineer</option>
+                                        <option value="Java Developer">Java Developer</option>
+                                        <option value="Frontend Developer">Frontend Developer</option>
+                                        <option value="Backend Developer">Backend Developer</option>
+                                        <option value="Full Stack Developer">Full Stack Developer</option>
+                                        <option value="QA / Test Engineer">QA / Test Engineer</option>
+                                        <option value="Data Analyst">Data Analyst</option>
+                                        <option value="custom">+ Add Custom Role</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="custom-role-wrap" style="display: none;">
+                                <label for="setup-custom-role">Custom Role Title</label>
+                                <input type="text" id="setup-custom-role" class="form-input" placeholder="e.g. DevOps Engineer">
+                            </div>
+
+                            <div class="form-row-grid three-col">
+                                <div class="form-group">
+                                    <label for="setup-company-type">Company Target</label>
+                                    <select id="setup-company-type" class="form-select">
+                                        <option value="Product-Based">Product-Based (FAANG / SaaS)</option>
+                                        <option value="Service-Based">Service-Based (IT Services)</option>
+                                        <option value="Startup">High-Growth Startup</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="setup-type">Interview Round Type</label>
+                                    <select id="setup-type" class="form-select">
+                                        <option value="Technical">Technical</option>
+                                        <option value="Coding Interview">Coding Interview</option>
+                                        <option value="Project Round">Project Round</option>
+                                        <option value="HR">HR</option>
+                                        <option value="Mixed Interview" selected>Mixed Interview</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="setup-length">Questions</label>
+                                    <select id="setup-length" class="form-select">
+                                        <option value="5">5 Questions</option>
+                                        <option value="10" selected>10 Questions</option>
+                                        <option value="15">15 Questions</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="role-intelligence-preview card" id="role-intel-preview" style="margin-bottom: 20px; background: var(--bg-surface);">
+                                <div class="intel-header">
+                                    <span class="executive-badge">DOMAIN PREVIEW</span>
+                                    <h4 id="intel-role-title">Selected Domain: Software Engineer</h4>
+                                </div>
+                                <div class="tags-flex" id="intel-topics-tags" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                                    <!-- Dynamic tags -->
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-gold btn-lg btn-block" id="btn-generate-roadmap">
+                                <span>Generate Roadmap & Start Interview ➔</span>
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 4: ROADMAP ================= -->
+            <section class="view-section" id="view-roadmap">
+                <div class="roadmap-container" style="max-width: 900px; margin: 0 auto;">
+                    <div class="section-header text-center" style="margin-bottom: 24px;">
+                        <span class="executive-badge">STAGE PIPELINE</span>
+                        <h2>Your Executive Interview Roadmap</h2>
+                        <p class="text-secondary" id="roadmap-subtitle">Customized stage pipeline for Java Developer round.</p>
+                    </div>
+
+                    <div class="card border-gold text-center" style="padding: 40px 20px;">
+                        <h3 style="margin-bottom: 12px;">Ready to Begin Stage 01: Core Technical Round</h3>
+                        <p class="text-secondary" style="margin-bottom: 24px;">You will be evaluated on technical accuracy, clarity, and confidence alignment.</p>
+                        <button class="btn btn-gold btn-lg" id="btn-start-full-interview">
+                            <span>🚀 Enter Interview Room Now</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 5: INTERVIEW ROOM (PART 4) ================= -->
+            <section class="view-section" id="view-room">
+                <div class="interview-room-layout">
+                    
+                    <!-- LEFT PANEL: ROUND INFO -->
+                    <div class="room-panel">
+                        <span class="room-panel-title">ROUND INFORMATION</span>
+                        <div class="stage-badge-box">
+                            <span class="badge badge-gold" id="room-round-pill">STAGE 01 / TECHNICAL</span>
+                            <h4 id="room-role-title">Software Engineer Interview</h4>
+                        </div>
+
+                        <div class="progress-block">
+                            <div class="progress-meta">
+                                <span>Question Progress</span>
+                                <strong id="room-q-progress-text">Question 01 / 10</strong>
+                            </div>
+                            <div class="progress-bar-sm">
+                                <div class="progress-fill gold" id="room-q-progress-bar" style="width: 10%"></div>
+                            </div>
+                        </div>
+
+                        <div class="question-stats-mini">
+                            <div class="q-stat-item">
+                                <span class="lbl">Category</span>
+                                <span class="val text-gold" id="room-topic-tag">OOP & Design</span>
+                            </div>
+                            <div class="q-stat-item">
+                                <span class="lbl">Difficulty</span>
+                                <span class="val text-amber" id="room-diff-tag">Intermediate</span>
+                            </div>
+                            <div class="q-stat-item">
+                                <span class="lbl">Answered</span>
+                                <span class="val text-emerald" id="room-answered-count">0 / 10</span>
+                            </div>
+                        </div>
+
+                        <div class="room-hint-box card" id="room-hint-card" style="padding: 14px; background: var(--bg-surface);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <span style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">💡 HINT ASSISTANT</span>
+                                <button class="btn btn-xs btn-outline-gold" id="btn-reveal-hint">Reveal Hint</button>
+                            </div>
+                            <p class="hint-text text-secondary hidden" id="room-hint-text" style="font-size: 12.5px;">Click reveal hint to view benchmark tips.</p>
+                        </div>
+                    </div>
+
+                    <!-- CENTER PANEL: QUESTION & ANSWER AREA -->
+                    <div class="room-panel room-center">
+                        <div>
+                            <div class="room-center-header">
+                                <span class="question-number-badge" id="room-q-num-badge">Question 01 / 10</span>
+                                <span class="badge badge-gold" id="room-round-type-tag">Technical Round</span>
+                            </div>
+
+                            <div class="question-display-box">
+                                <h2 class="question-text" id="room-question-text">
+                                    Explain method overloading and method overriding in Java. Give a real-world scenario.
+                                </h2>
+                            </div>
+
+                            <div class="star-guide-banner card" id="star-guide-banner" style="display: none; margin-bottom: 16px; border-color: var(--accent-amber);">
+                                <span class="badge badge-amber">STAR METHOD FRAMEWORK</span>
+                                <p class="text-secondary" style="font-size: 13px; margin-top: 4px;">Structure: <strong>Situation ➔ Task ➔ Action ➔ Result</strong></p>
+                            </div>
+
+                            <div class="answer-input-container">
+                                <div class="answer-label-row">
+                                    <label for="room-answer-input">Your Response *</label>
+                                    <span class="char-counter text-muted" id="answer-word-count">0 Words</span>
+                                </div>
+                                <textarea id="room-answer-input" class="answer-textarea" rows="8" placeholder="Type your technical response here... Be thorough and include key concepts, syntax examples, or trade-offs."></textarea>
+                            </div>
+
+                            <!-- Confidence Slider -->
+                            <div class="confidence-tracker-box">
+                                <div class="confidence-header">
+                                    <div class="conf-title">
+                                        <span>CONFIDENCE LEVEL:</span>
+                                        <span class="conf-value" id="conf-slider-val">75%</span>
+                                    </div>
+                                    <span class="badge badge-gold" id="conf-badge-label">Confident</span>
+                                </div>
+                                <div class="confidence-slider-wrap">
+                                    <input type="range" id="confidence-slider" min="0" max="100" value="75" class="range-slider">
+                                    <div class="slider-labels">
+                                        <span>0% (Uncertain)</span>
+                                        <span>50% (Moderate)</span>
+                                        <span>100% (Certain)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="room-actions-bar">
+                            <button class="btn btn-dark" id="btn-room-prev">Previous</button>
+                            <button class="btn btn-outline-gold" id="btn-room-review">Mark Review</button>
+                            <button class="btn btn-outline-red" id="btn-room-skip">Skip</button>
+                            <button class="btn btn-gold" id="btn-room-submit">
+                                <span>Submit Answer ➔</span>
+                            </button>
+                            <button class="btn btn-dark" id="btn-room-next">Next ➔</button>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT PANEL: METRICS & NAVIGATION -->
+                    <div class="room-panel">
+                        <div class="timer-box">
+                            <span class="timer-lbl">TIME REMAINING</span>
+                            <div class="timer-display" id="room-timer-display">00:00</div>
+                            <button class="btn btn-xs btn-dark" id="btn-toggle-timer">Pause Timer</button>
+                        </div>
+
+                        <div class="q-nav-grid-box">
+                            <div class="q-nav-title">QUESTION PROGRESS</div>
+                            <div class="q-nav-grid" id="room-q-nav-grid">
+                                <!-- Dynamic pills -->
+                            </div>
+                        </div>
+
+                        <div class="room-finish-box" style="margin-top: 20px;">
+                            <button class="btn btn-outline-red btn-block" id="btn-finish-interview">
+                                <span>🏁 Finish & Evaluate</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <!-- ================= ANSWER EVALUATION MODAL ================= -->
+            <div class="modal-backdrop hidden" id="eval-modal-backdrop">
+                <div class="eval-modal">
+                    <div class="modal-header">
+                        <div>
+                            <span class="badge badge-gold">ANSWER EVALUATION</span>
+                            <h3 id="eval-modal-q-num" style="margin-top: 4px;">Score Analysis</h3>
+                        </div>
+                        <button class="modal-close-btn" id="btn-close-eval-modal">✕</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="card border-gold" style="margin-bottom: 20px; text-align: center; padding: 20px;">
+                            <div style="font-size: 36px; font-weight: 800; color: var(--accent-gold);" id="eval-score-text">78 / 100</div>
+                            <div class="text-secondary" style="font-size: 13px; margin-top: 4px;" id="eval-conf-insight">Calibrated Alignment: Your confidence matches your accuracy.</div>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 8px;">Your Answer:</h4>
+                            <p id="eval-user-answer-text" class="text-secondary" style="font-size: 13.5px; line-height: 1.5;"></p>
+                        </div>
+
+                        <div class="card border-gold" style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 8px;">Sample Executive Benchmark Response:</h4>
+                            <p id="eval-sample-answer-text" class="text-secondary" style="font-size: 13.5px; line-height: 1.5;"></p>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-gold btn-block" id="btn-eval-continue">Continue Interview ➔</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ================= VIEW 6: CODING LAB ================= -->
+            <section class="view-section" id="view-coding-lab">
+                <div class="coding-lab-container">
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                        <div>
+                            <span class="executive-badge">TECHNICAL ENVIRONMENT</span>
+                            <h2>Coding Practice Lab</h2>
+                            <p class="text-secondary">Solve algorithmic and database query challenges in Java, Python, C, and SQL.</p>
+                        </div>
+                        <select id="coding-lang-select" class="form-select font-mono" style="width: 140px;">
+                            <option value="Java">Java</option>
+                            <option value="Python">Python</option>
+                            <option value="C">C</option>
+                            <option value="SQL" selected>SQL</option>
+                        </select>
+                    </div>
+
+                    <div class="coding-workspace-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="card">
+                            <span class="badge badge-gold" id="coding-topic-badge">SQL Joins & Aggregation</span>
+                            <h3 style="margin: 10px 0;" id="coding-problem-title">Complex SQL Joins</h3>
+                            <p class="text-secondary" id="coding-problem-desc">Write an SQL query to retrieve employee names, department titles, and total salary payouts.</p>
+                            <div class="card" style="background: var(--bg-surface); margin-top: 16px;">
+                                <h4>Expected Approach</h4>
+                                <p class="text-secondary" id="coding-expected-approach" style="font-size: 13px;">Use INNER JOIN with GROUP BY and SUM aggregations.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <textarea id="code-input" class="code-textarea font-mono" rows="12" style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); padding: 12px; color: var(--text-primary);">SELECT e.name, d.department_name, SUM(e.salary)
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.id
+GROUP BY d.department_name;</textarea>
+                            <button class="btn btn-gold btn-block" id="btn-submit-code" style="margin-top: 12px;">Submit & Evaluate Code</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 7: PROJECT ROUND ================= -->
+            <section class="view-section" id="view-project-round">
+                <div class="project-round-container">
+                    <div class="section-header text-center" style="margin-bottom: 24px;">
+                        <span class="executive-badge">ARCHITECTURE & DEEP-DIVE</span>
+                        <h2>Project Deep-Dive Round</h2>
+                        <p class="text-secondary">Master technical architecture explanations, database trade-offs, and scalability choices.</p>
+                    </div>
+                    <div id="project-questions-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 8: HR ROUND ================= -->
+            <section class="view-section" id="view-hr-round">
+                <div class="hr-round-container">
+                    <div class="section-header text-center" style="margin-bottom: 24px;">
+                        <span class="executive-badge">BEHAVIORAL MASTERY</span>
+                        <h2>HR & Behavioral STAR Round</h2>
+                        <p class="text-secondary">Structure responses using the STAR Framework (Situation ➔ Task ➔ Action ➔ Result).</p>
+                    </div>
+                    <div id="hr-questions-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 9: LEARNING CENTER (PART 6 & PART 7) ================= -->
+            <section class="view-section" id="view-learning-center">
+                <div class="learning-container">
+                    <div class="section-header" style="margin-bottom: 24px;">
+                        <span class="executive-badge">EXECUTIVE LEARNING SUITE</span>
+                        <h2>Learning Center</h2>
+                        <p class="text-secondary">Target weak areas, watch YouTube resources, practice questions, and measure verified score improvements.</p>
+                    </div>
+
+                    <!-- WEAK TOPIC DETECTED EXECUTIVE CARD (PART 6 REQUIREMENT) -->
+                    <div class="weak-topic-exec-card border-gold mb-4">
+                        <div class="topic-header-row">
+                            <div>
+                                <span class="executive-badge">DETECTED KNOWLEDGE GAP</span>
+                                <h2>DBMS — 48% Accuracy</h2>
+                            </div>
+                            <span class="topic-score-badge">WEAK TOPIC</span>
+                        </div>
+
+                        <div class="detection-reason-box">
+                            <strong>Why this was detected:</strong> You have struggled with DBMS questions in 3 recent interview sessions.
+                        </div>
+
+                        <h3 style="font-size: 16px; margin-bottom: 12px;">Recommended YouTube Learning Resources</h3>
+                        
+                        <div class="resource-card-exec">
+                            <div class="resource-info">
+                                <h4>Mastering SQL & DBMS Joins for Technical Interviews</h4>
+                                <p>Topic: DBMS / SQL • Estimated Duration: 15 mins</p>
+                            </div>
+                            <div class="resource-actions">
+                                <a href="https://www.youtube.com/results?search_query=DBMS+SQL+Joins+interview" target="_blank" class="btn btn-outline-gold btn-sm">Watch & Learn ↗</a>
+                                <button class="btn btn-gold btn-sm btn-dash-rec-action" id="btn-practice-dbms-topic">Practice This Topic</button>
+                            </div>
+                        </div>
+
+                        <div class="resource-card-exec">
+                            <div class="resource-info">
+                                <h4>Database Indexing, B-Trees & Performance Optimization</h4>
+                                <p>Topic: DBMS Optimization • Estimated Duration: 22 mins</p>
+                            </div>
+                            <div class="resource-actions">
+                                <a href="https://www.youtube.com/results?search_query=DBMS+Indexing+interview" target="_blank" class="btn btn-outline-gold btn-sm">Watch & Learn ↗</a>
+                                <button class="btn btn-gold btn-sm btn-dash-rec-action">Practice This Topic</button>
+                            </div>
+                        </div>
+
+                        <!-- INTERACTIVE FLOW: LEARN -> PRACTICE -> RE-TEST -->
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; background: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm);">
+                            <span class="badge badge-gold">FLOW</span>
+                            <span style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Learn ➔ Practice ➔ Re-test</span>
+                        </div>
+                    </div>
+
+                    <!-- IMPROVEMENT VIEW COMPONENT (PART 7 REQUIREMENT) -->
+                    <div class="improvement-comparison-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="executive-badge">PERFORMANCE VERIFICATION</span>
+                            <span class="badge badge-emerald">+26% VERIFIED GAIN</span>
+                        </div>
+                        <h3 style="margin-top: 6px;">DBMS Skill Improvement</h3>
+                        
+                        <div class="cmp-flex-grid">
+                            <div class="cmp-val-box before">
+                                <div style="font-size: 11px; font-weight: 700; color: var(--accent-rose);">BEFORE</div>
+                                <div class="cmp-val-num before">42%</div>
+                            </div>
+                            <div class="cmp-val-box after">
+                                <div style="font-size: 11px; font-weight: 700; color: var(--accent-emerald);">AFTER</div>
+                                <div class="cmp-val-num after">68%</div>
+                            </div>
+                            <div class="cmp-val-box delta">
+                                <div style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">IMPROVEMENT</div>
+                                <div class="cmp-val-num delta">+26%</div>
+                            </div>
+                        </div>
+
+                        <div class="improvement-note">
+                            ✓ Your progress is improving. Continue practicing weak areas.
+                        </div>
+                    </div>
+
+                    <div class="tab-content active" id="tab-weak">
+                        <div class="weak-topics-cards-grid" id="learning-weak-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 10: MISTAKE VAULT (PART 8) ================= -->
+            <section class="view-section" id="view-mistake-vault">
+                <div class="vault-container">
+                    <div class="section-header" style="margin-bottom: 20px;">
+                        <span class="executive-badge">INTELLIGENCE VAULT</span>
+                        <h2>Mistake Vault</h2>
+                        <p class="text-secondary">Store, review, and retry missed questions to convert weak areas into strengths.</p>
+                    </div>
+
+                    <!-- FILTER TABS (PART 8 REQUIREMENT) -->
+                    <div class="vault-filter-bar">
+                        <div class="filter-group">
+                            <button class="filter-chip active" data-filter="all">All Mistakes</button>
+                            <button class="filter-chip" data-filter="recent">Recent Mistakes</button>
+                            <button class="filter-chip" data-filter="frequent">Frequently Repeated Mistakes</button>
+                            <button class="filter-chip" data-filter="needs-review">Needs Review</button>
+                            <button class="filter-chip" data-filter="improved">Improved</button>
+                        </div>
+                        <button class="btn btn-sm btn-gold" id="btn-practice-all-mistakes">Practice Mistakes ➔</button>
+                    </div>
+
+                    <div class="vault-cards-grid" id="vault-cards-grid">
+                        <div class="mistake-card-exec">
+                            <div class="mistake-card-header">
+                                <span class="badge badge-rose">NEEDS REVIEW</span>
+                                <span class="badge badge-dark">DBMS / SQL</span>
+                            </div>
+                            <h4 class="mistake-q-title">What is the difference between WHERE and HAVING clauses in SQL?</h4>
+                            <div class="mistake-body-grid">
+                                <div class="mistake-block user-ans">
+                                    <h5>Your Answer:</h5>
+                                    <p>Both are used to filter rows in a query.</p>
+                                </div>
+                                <div class="mistake-block correct-ans">
+                                    <h5>Correct Benchmark Answer:</h5>
+                                    <p>WHERE filters individual rows before grouping, while HAVING filters aggregated group results after GROUP BY.</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-gold">Retry Question ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 11: ANALYTICS (PART 5) ================= -->
+            <section class="view-section" id="view-analytics">
+                <div class="analytics-container">
+                    <div class="section-header" style="margin-bottom: 24px;">
+                        <span class="executive-badge">PERFORMANCE INTELLIGENCE</span>
+                        <h2>Executive Analytics Dashboard</h2>
+                        <p class="text-secondary">Comprehensive metric breakdown, confidence vs accuracy calibration, and skill analysis.</p>
+                    </div>
+
+                    <!-- PERFORMANCE OVERVIEW (PART 5 REQUIREMENT) -->
+                    <div class="card border-gold mb-4" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <h3 class="card-title">Performance Overview</h3>
+                            <span class="badge badge-gold">EXECUTIVE SUMMARY</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; text-align: center;">
+                            <div class="card" style="background: var(--bg-surface);">
+                                <div style="font-size: 11px; color: var(--text-muted);">TECHNICAL ACCURACY</div>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--accent-emerald); margin-top: 4px;">78%</div>
+                            </div>
+                            <div class="card" style="background: var(--bg-surface);">
+                                <div style="font-size: 11px; color: var(--text-muted);">COMMUNICATION</div>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--accent-indigo); margin-top: 4px;">65%</div>
+                            </div>
+                            <div class="card" style="background: var(--bg-surface);">
+                                <div style="font-size: 11px; color: var(--text-muted);">CONFIDENCE</div>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--accent-gold); margin-top: 4px;">82%</div>
+                            </div>
+                            <div class="card" style="background: var(--bg-surface);">
+                                <div style="font-size: 11px; color: var(--text-muted);">COMPLETENESS</div>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--text-primary); margin-top: 4px;">74%</div>
+                            </div>
+                            <div class="card" style="background: var(--bg-surface);">
+                                <div style="font-size: 11px; color: var(--text-muted);">PROBLEM SOLVING</div>
+                                <div style="font-size: 24px; font-weight: 800; color: var(--accent-amber); margin-top: 4px;">61%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SKILL ANALYSIS (PART 5 REQUIREMENT) -->
+                    <div class="card mb-4" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <h3 class="card-title">Skill Analysis</h3>
+                            <span class="badge badge-gold">TECH STACK MASTERY</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                                    <span>Java</span>
+                                    <span class="text-emerald">82%</span>
+                                </div>
+                                <div class="progress-bar-md" style="margin-top: 4px;"><div class="progress-fill emerald" style="width: 82%"></div></div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                                    <span>SQL</span>
+                                    <span class="text-gold">64%</span>
+                                </div>
+                                <div class="progress-bar-md" style="margin-top: 4px;"><div class="progress-fill gold" style="width: 64%"></div></div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                                    <span>DBMS (Weak Topic)</span>
+                                    <span class="text-rose">48%</span>
+                                </div>
+                                <div class="progress-bar-md" style="margin-top: 4px;"><div class="progress-fill rose" style="width: 48%"></div></div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700;">
+                                    <span>DSA (Weak Topic)</span>
+                                    <span class="text-rose">39%</span>
+                                </div>
+                                <div class="progress-bar-md" style="margin-top: 4px;"><div class="progress-fill rose" style="width: 39%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 12: HISTORY ================= -->
+            <section class="view-section" id="view-history">
+                <div class="history-container">
+                    <div class="section-header" style="margin-bottom: 20px;">
+                        <span class="executive-badge">LOGGED SESSIONS</span>
+                        <h2>Interview Session History</h2>
+                    </div>
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Role</th>
+                                        <th>Type</th>
+                                        <th>Score</th>
+                                        <th>Confidence</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-full-tbody">
+                                    <tr>
+                                        <td colspan="6" class="text-center">No recorded interview history yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= VIEW 13: CANDIDATE PROFILE ================= -->
+            <section class="view-section" id="view-profile">
+                <div class="profile-container" style="max-width: 800px; margin: 0 auto;">
+                    <div class="section-header" style="margin-bottom: 24px;">
+                        <span class="executive-badge">CANDIDATE PROFILE</span>
+                        <h2>Executive Profile Management</h2>
+                    </div>
+                    <div class="card border-gold mb-4" style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div class="user-avatar-gold" style="width: 60px; height: 60px; font-size: 20px;">AM</div>
+                            <div>
+                                <h3 id="profile-card-name">Alex Mercer</h3>
+                                <p class="text-secondary" id="profile-card-role">Software Engineer • 1-3 Years Experience</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Local Data Management</h3>
+                        <p class="text-secondary" style="margin: 8px 0 16px 0;">All interview performance metrics, weak topic flags, mistakes, and history are stored locally in your browser.</p>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-outline-gold" id="btn-export-data">Export Data Backup (JSON)</button>
+                            <button class="btn btn-outline-red" id="btn-clear-data">Reset Local Storage</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- SCRIPTS LOAD -->
+    <script src="js/data/questions.js"></script>
+    <script src="js/data/achievements.js"></script>
+    <script src="js/modules/storage.js"></script>
+    <script src="js/modules/recommendationEngine.js"></script>
+    <script src="js/modules/charts.js"></script>
+    <script src="js/modules/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
